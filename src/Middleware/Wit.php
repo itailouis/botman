@@ -100,13 +100,15 @@ class Wit implements MiddlewareInterface
      */
     public function matching(IncomingMessage $message, $pattern, $regexMatched)
     {
-        $intents = Collection::make($message->getExtras())->get('intents', []);
+        $intents = Collection::make($message->getExtras())->get('entities', []);
 
         if (!empty($intents)) {
             foreach ($intents as $intent) {
-                if (($intent['name'] === $pattern || $intent['id'] === $pattern) && $intent['confidence'] >= $this->minimumConfidence) {
-                    return true;
-                }
+                foreach($intent as $itemIntent){
+                    if (($itemIntent['name'] === $pattern || $itemIntent['id'] === $pattern) && $itemIntent['confidence'] >= $this->minimumConfidence) {
+                      return true;
+                  }
+               }
             }
         }
 
